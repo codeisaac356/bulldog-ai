@@ -1,56 +1,78 @@
 import streamlit as st
-from openai import OpenAI
+import difflib
 
-# Show title and description.
-st.title("💬 Chatbot")
-st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model to generate responses. "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
-    "You can also learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
-)
+st.set_page_config(page_title="Bulldog AI Student Chatbot", page_icon="🐶", layout="centered")
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
+# Sidebar with info and logo
+with st.sidebar:
+    st.image("https://cdn-icons-png.flaticon.com/512/616/616408.png", width=80)
+    st.markdown("## 🐾 Bulldog AI Help")
+    st.info(
+        "Welcome to Bulldog AI! \n\n"
+        "Ask any question about your school. "
+        "Try things like:\n"
+        "- What time does the school building open?\n"
+        "- Where is the Portola Activities Office?\n"
+        "- Can visitors come to campus?\n"
+        "\nIf you don't get an answer, try rephrasing your question."
+    )
+    st.markdown("---")
+    st.caption("Made for Portola High School students.")
 
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+st.markdown("<h1 style='text-align: center; color: #6d28d9;'>🐶 Bulldog AI Student Chatbot</h1>", unsafe_allow_html=True)
+st.markdown("<hr>", unsafe_allow_html=True)
 
-    # Create a session state variable to store the chat messages. This ensures that the
-    # messages persist across reruns.
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+faq = {
+    "what time does the school building open": "The school building is open from 7:30 a.m. to 4:00 p.m.",
+    "when does the school open": "The school building is open from 7:30 a.m. to 4:00 p.m.",
+    "what are the school hours": "The school building is open from 7:30 a.m. to 4:00 p.m.",
+    "when can students access the front office": "Students may access the front office before class, during snack and lunch, during office hours, and after school. Permission is needed at other times.",
+    "can i go to the office during class": "Permission must be obtained to be in the office at any time other than before class, during snack and lunch, during office hours, and after school.",
+    "where is the portola activities office": "The Portola Activities Office (P.A.C.) is open to service students. The specific times are posted outside the P.A.C.",
+    "what should i do if i lose my textbook": "Lost & found articles are to be turned in to the front office. Fines are imposed if books are lost.",
+    "can i lend my books to other students": "You should not lend books to other students. Identify your textbooks and school materials with your name.",
+    "what happens if i lose my personal property": "The loss of personal property will not be reimbursed by the school.",
+    "can i leave campus during assemblies": "Students may NOT leave campus during assemblies.",
+    "what is the closed campus policy": "Portola High School maintains a closed campus policy. Those leaving campus without written approval will receive a penalty.",
+    "can visitors come to campus": "Guests, visitors, or friends of PHS students are not permitted on campus. See your Assistant Principal in advance for procedure and permission. Visitors must obtain a visitor's pass from the front office.",
+    "how are messages delivered to students": "Messages are only delivered to students in cases of extreme emergencies. The nature of all such emergencies must be established prior to the message delivery.",
+    "can flowers or balloons be delivered to students": "Flowers, balloons, and similar items will not be accepted for delivery to students. All such items will be refused delivery at the front office.",
+}
 
-    # Display the existing chat messages via `st.chat_message`.
+def get_answer(user_input):
+    user_input = user_input.lower().strip()
+    for question, answer in faq.items():
+        if question in user_input:
+            return answer
+    questions = list(faq.keys())
+    closest = difflib.get_close_matches(user_input, questions, n=1, cutoff=0.5)
+    if closest:
+        return faq[closest[0]]
+    return "I'm sorry, I don't know the answer to that. Please ask the school office for more information."
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+chat_container = st.container()
+with chat_container:
     for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+        if message["role"] == "user":
+            st.markdown(
+                f"<div style='background-color:#e0e7ff; padding:10px; border-radius:10px; margin-bottom:5px;'><b>You:</b> {message['content']}</div>",
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                f"<div style='background-color:#f1f5f9; padding:10px; border-radius:10px; margin-bottom:10px;'><b>Bulldog AI:</b> {message['content']}</div>",
+                unsafe_allow_html=True,
+            )
 
-    # Create a chat input field to allow the user to enter a message. This will display
-    # automatically at the bottom of the page.
-    if prompt := st.chat_input("What is up?"):
+user_input = st.chat_input("Type your question here...")
+if user_input:
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    answer = get_answer(user_input)
+    st.session_state.messages.append({"role": "assistant", "content": answer})
+    st.experimental_rerun()
 
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        # Generate a response using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
-
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
-        with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<div style='text-align:center; color:gray;'>© 2025 Portola High School • Bulldog
