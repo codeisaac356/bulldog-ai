@@ -74,5 +74,4 @@ if user_input:
     st.session_state.messages.append({"role": "assistant", "content": answer})
     st.experimental_rerun()
 
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("<div style='text-align:center; color:gray;'>© 2025 Portola High School • Bulldog
+
