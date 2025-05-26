@@ -53,6 +53,7 @@ faq = {
     "what is the break time during finals": "During finals, breaks are scheduled between periods. For example, there is a 10-minute break between Period A and Period B.",
     "what is the lunch time on monday": "On Mondays, lunch is from 11:55 AM to 12:25 PM.",
     "what is the lunch time on block days": "On block days (Tuesday to Friday), lunch is from 12:15 PM to 12:45 PM.",
+
     # New FAQs from Portola_Courses
     "what courses are offered for 9th grade": "For 9th grade, courses include Literary & Language Arts 1 (CP), Literary & Language Arts 1 Honors, Integrated Math 1, Biology, World History, Spanish 1, French 1, Mandarin 1, PE 9, Art 1, Drama 1, Music Ensemble, AVID 9, and Introduction to Computer Science.",
     "what courses are offered for 10th grade": "For 10th grade, courses include American Literary & Language Arts (CP), American Literary & Language Arts Honors, Integrated Math 2, Chemistry, U.S. History, Spanish 2, French 2, Mandarin 2, PE 10, Art 2, Drama 2, Advanced Music Ensemble, AVID 10, and Computer Science Principles.",
@@ -125,7 +126,7 @@ if user_input:
     answer = get_answer(user_input)
     st.session_state.messages.append({"role": "assistant", "content": answer})
     
-    
+
 
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown("<div style='text-align:center; color:gray;'>© 2025 Portola High School • Bulldog AI</div>", unsafe_allow_html=True)
