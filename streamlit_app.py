@@ -23,6 +23,7 @@ st.markdown("<h1 style='text-align: center; color: #6d28d9;'>🐶 Bulldog AI Stu
 st.markdown("<hr>", unsafe_allow_html=True)
 
 faq = {
+    # Existing FAQs
     "what time does the school building open": "The school building is open from 7:30 a.m. to 4:00 p.m.",
     "when does the school open": "The school building is open from 7:30 a.m. to 4:00 p.m.",
     "what are the school hours": "The school building is open from 7:30 a.m. to 4:00 p.m.",
@@ -37,13 +38,55 @@ faq = {
     "can visitors come to campus": "Guests, visitors, or friends of PHS students are not permitted on campus. See your Assistant Principal in advance for procedure and permission. Visitors must obtain a visitor's pass from the front office.",
     "how are messages delivered to students": "Messages are only delivered to students in cases of extreme emergencies. The nature of all such emergencies must be established prior to the message delivery.",
     "can flowers or balloons be delivered to students": "Flowers, balloons, and similar items will not be accepted for delivery to students. All such items will be refused delivery at the front office.",
+
+    # New FAQs from Portola_schedule
+    "what is the monday schedule": "On Mondays, students attend all eight periods in shorter sessions. Period 1 starts at 8:30 AM and Period 8 ends at 3:50 PM.",
+    "what is the finals schedule": "During finals week, the school follows adjusted schedules. For example, the 3-Block Finals Schedule starts with Period A at 8:30 AM and ends with Period C at 12:55 PM.",
+    "what is the 2-block finals schedule": "The 2-Block Finals Schedule starts with Period A at 8:30 AM and ends with Period C at 1:15 PM.",
+    "what is the 3-block finals schedule": "The 3-Block Finals Schedule starts with Period A at 8:30 AM and ends with Period C at 12:55 PM.",
+    "what is the minimum day schedule": "On minimum days, all eight periods meet in a single day. Period 1 starts at 8:30 AM and Period 8 ends at 12:40 PM.",
+    "what is the double assembly schedule": "On double assembly days, students are divided into two groups. Period 1/2 starts at 8:30 AM, and the day ends with Period 7/8 at 3:40 PM.",
+    "what is the tuesday schedule": "On Tuesdays, students follow a block schedule with collaboration time starting at 8:00 AM. Period 1/2 starts at 8:45 AM and Period 7/8 ends at 3:40 PM.",
+    "what is the wednesday schedule": "On Wednesdays, students follow a block schedule with collaboration time starting at 8:00 AM. Period 1/2 starts at 8:45 AM and Period 7/8 ends at 3:40 PM.",
+    "what is the thursday schedule": "On Thursdays, students follow a block schedule without collaboration time. Period 1/2 starts at 8:30 AM and Period 7/8 ends at 3:40 PM.",
+    "what is the friday schedule": "On Fridays, students follow a block schedule without collaboration time. Period 1/2 starts at 8:30 AM and Period 7/8 ends at 3:40 PM.",
+    "what is the break time during finals": "During finals, breaks are scheduled between periods. For example, there is a 10-minute break between Period A and Period B.",
+    "what is the lunch time on monday": "On Mondays, lunch is from 11:55 AM to 12:25 PM.",
+    "what is the lunch time on block days": "On block days (Tuesday to Friday), lunch is from 12:15 PM to 12:45 PM.",
 }
+
+import difflib
 
 def get_answer(user_input):
     user_input = user_input.lower().strip()
+
+    # Step 1: Exact match
     for question, answer in faq.items():
-        if question in user_input:
+        if question in user_input or user_input in question:
             return answer
+
+    # Step 2: Keyword-based inference
+    keywords = user_input.split()
+    best_match = None
+    best_score = 0
+
+    for question, answer in faq.items():
+        score = sum(1 for word in keywords if word in question)
+        if score > best_score:
+            best_score = score
+            best_match = answer
+
+    if best_score > 0:
+        return best_match
+
+    # Step 3: Fuzzy matching as a fallback
+    questions = list(faq.keys())
+    closest = difflib.get_close_matches(user_input, questions, n=1, cutoff=0.4)
+    if closest:
+        return faq[closest[0]]
+
+    # Step 4: Default response if no match is found
+    return "I'm sorry, I don't know the answer to that. Please ask the school office for more information."
     questions = list(faq.keys())
     closest = difflib.get_close_matches(user_input, questions, n=1, cutoff=0.5)
     if closest:
@@ -69,9 +112,18 @@ with chat_container:
 
 user_input = st.chat_input("Type your question here...")
 if user_input:
+    # Append the user's message
     st.session_state.messages.append({"role": "user", "content": user_input})
+    
+    # Generate the bot's response
     answer = get_answer(user_input)
     st.session_state.messages.append({"role": "assistant", "content": answer})
+    
+    # Force the app to rerun to display the response immediately
     st.experimental_rerun()
+    
+
+st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<div style='text-align:center; color:gray;'>© 2025 Portola High School • Bulldog AI</div>", unsafe_allow_html=True)
 
 
