@@ -53,8 +53,14 @@ faq = {
     "what is the break time during finals": "During finals, breaks are scheduled between periods. For example, there is a 10-minute break between Period A and Period B.",
     "what is the lunch time on monday": "On Mondays, lunch is from 11:55 AM to 12:25 PM.",
     "what is the lunch time on block days": "On block days (Tuesday to Friday), lunch is from 12:15 PM to 12:45 PM.",
+    # New FAQs from Portola_Courses
+    "what courses are offered for 9th grade": "For 9th grade, courses include Literary & Language Arts 1 (CP), Literary & Language Arts 1 Honors, Integrated Math 1, Biology, World History, Spanish 1, French 1, Mandarin 1, PE 9, Art 1, Drama 1, Music Ensemble, AVID 9, and Introduction to Computer Science.",
+    "what courses are offered for 10th grade": "For 10th grade, courses include American Literary & Language Arts (CP), American Literary & Language Arts Honors, Integrated Math 2, Chemistry, U.S. History, Spanish 2, French 2, Mandarin 2, PE 10, Art 2, Drama 2, Advanced Music Ensemble, AVID 10, and Computer Science Principles.",
+    "what courses are offered for 11th grade": "For 11th grade, courses include British Literary & Language Arts (CP), AP English Language and Composition, Integrated Math 3, Pre-Calculus, Physics, AP Biology, AP Chemistry, Government, Economics, Spanish 3, French 3, Mandarin 3, PE Electives, Art 3, Drama 3, Advanced Music Ensemble, AVID 11, and AP Computer Science A.",
+    "what courses are offered for 12th grade": "For 12th grade, courses include Expository Reading and Writing Course (ERWC), AP English Literature and Composition, Calculus, AP Calculus AB, AP Calculus BC, AP Physics, Environmental Science, AP Psychology, Sociology, Spanish 4, French 4, Mandarin 4, PE Electives, Art 4, Drama 4, Advanced Music Ensemble, AVID 12, and AP Computer Science Principles.",
+    "what is the mathematics pathway": "The Mathematics Pathway includes Integrated Math 1 in 9th grade, Integrated Math 2 in 10th grade, Integrated Math 3 in 11th grade, and Pre-Calculus or Statistics in 12th grade. The Accelerated Pathway includes Integrated Math 1 Honors, Integrated Math 2 Honors, Pre-Calculus Honors, and AP Calculus AB or BC.",
+    "what is the english pathway": "The English Pathway includes Literary & Language Arts 1 in 9th grade, American Literary & Language Arts in 10th grade, British Literary & Language Arts in 11th grade, and ERWC in 12th grade. The Honors/AP Pathway includes Literary & Language Arts 1 Honors, American Literary & Language Arts Honors, AP English Language and Composition, and AP English Literature and Composition.",
 }
-
 import difflib
 
 def get_answer(user_input):
