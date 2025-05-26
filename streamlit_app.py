@@ -119,8 +119,6 @@ if user_input:
     answer = get_answer(user_input)
     st.session_state.messages.append({"role": "assistant", "content": answer})
     
-    # Force the app to rerun to display the response immediately
-    st.experimental_rerun()
     
 
 st.markdown("<hr>", unsafe_allow_html=True)
