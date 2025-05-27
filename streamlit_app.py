@@ -176,8 +176,6 @@ if user_input:
     # Update context for future responses
     st.session_state.context = answer
     
-    # Force rerun to display the response immediately
-    st.experimental_rerun()
 
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown("<div style='text-align:center; color:gray;'>© 2025 Portola High School • Bulldog AI</div>", unsafe_allow_html=True)
